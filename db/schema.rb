@@ -10,9 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_31_125948) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_01_172650) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "ip_infos", force: :cascade do |t|
+    t.string "address"
+    t.decimal "latitude"
+    t.decimal "longitude"
+    t.boolean "is_vpn"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "pages", force: :cascade do |t|
     t.string "name"
@@ -23,22 +32,26 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_31_125948) do
 
   create_table "users", force: :cascade do |t|
     t.string "username"
-    t.string "registration_ip_address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "registration_ip_info_id"
+    t.index ["registration_ip_info_id"], name: "index_users_on_registration_ip_info_id"
   end
 
   create_table "visits", force: :cascade do |t|
     t.bigint "page_id"
     t.bigint "user_id"
     t.datetime "visited_at", precision: nil
-    t.string "ip_address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "ip_info_id"
+    t.index ["ip_info_id"], name: "index_visits_on_ip_info_id"
     t.index ["page_id"], name: "index_visits_on_page_id"
     t.index ["user_id"], name: "index_visits_on_user_id"
   end
 
+  add_foreign_key "users", "ip_infos", column: "registration_ip_info_id"
+  add_foreign_key "visits", "ip_infos"
   add_foreign_key "visits", "pages"
   add_foreign_key "visits", "users"
 end
