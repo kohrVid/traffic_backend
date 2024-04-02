@@ -6,13 +6,17 @@ class IpLocation
   end
 
   def coordinates
-    JSON.parse(ip_info_response.body)["data"]["loc"].split(/,\s*/).map(&:to_f)
+    ip_info_data['loc'].split(/,\s*/).map(&:to_f)
+  end
+
+  def vpn?
+    ip_info_data['privacy']['vpn']
   end
 
   private
 
-  def url
-    "https://ipinfo.io/widget/demo/#{@ip_address}" 
+  def ip_info_data
+    JSON.parse(ip_info_response.body)['data']
   end
 
   def ip_info_response
@@ -24,6 +28,10 @@ class IpLocation
       request: { timeout: 1 }
     )
 
-    conn.get(uri.request_uri) 
+    conn.get(uri.request_uri)
+  end
+
+  def url
+    "https://ipinfo.io/widget/demo/#{@ip_address}"
   end
 end

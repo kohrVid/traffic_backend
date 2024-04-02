@@ -26,5 +26,11 @@ RSpec.describe IpLocation do
       expect(subject.coordinates).to eq([52.3740, 4.8897])
     end
   end
+
+  context '#vpn?' do
+    it 'returns the VPN status of a given IP address' do
+      expect(subject).to be_vpn
+    end
+  end
 end
 
