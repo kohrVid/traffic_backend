@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_01_172650) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_02_111026) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -21,6 +21,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_01_172650) do
     t.boolean "is_vpn"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["address"], name: "index_ip_infos_on_address", unique: true
   end
 
   create_table "pages", force: :cascade do |t|
