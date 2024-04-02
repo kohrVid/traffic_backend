@@ -1,5 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe Visit, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  before do
+    create(:visit)
+  end
+
+  describe '.with_info' do
+    it 'includes location data for each visit' do
+      debugger
+    end
+  end
 end
