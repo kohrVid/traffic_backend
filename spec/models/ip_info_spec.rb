@@ -1,5 +1,25 @@
 require 'rails_helper'
 
 RSpec.describe IpInfo, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  subject { create(:ip_info) }
+
+  describe '#address' do
+    context 'when it is missing or blank' do
+      let(:new_ip) do
+        IpInfo.new(address: '')
+      end
+
+      before { new_ip.save }
+
+      it 'is invalid' do
+        expect(new_ip).not_to be_valid
+      end
+
+      it 'raises the correct error message' do
+        expect(
+          new_ip.errors.messages[:address]
+        ).to include("can't be blank")
+      end
+    end
+  end
 end
