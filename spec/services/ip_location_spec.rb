@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe IpLocation do
   subject { IpLocation.new(ip_address: ip_address) }
 
-  let(:ip_address) { create(:ip_info).address }
+  let(:ip_address) { '213.152.176.135' }
   let(:ip_info_url) { "https://ipinfo.io/widget/demo/#{ip_address}" }
 
   let(:get_ip_info_response) do

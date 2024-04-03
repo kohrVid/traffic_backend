@@ -3,6 +3,7 @@ require 'faraday'
 class IpLocation
   def initialize(ip_address:)
     @ip_address = ip_address
+    @ip_info_response = ip_info_response
   end
 
   def coordinates
@@ -16,7 +17,7 @@ class IpLocation
   private
 
   def ip_info_data
-    JSON.parse(ip_info_response.body)['data']
+    JSON.parse(@ip_info_response.body)['data']
   end
 
   def ip_info_response

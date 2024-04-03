@@ -6,6 +6,17 @@ RSpec.describe "Visits", type: :request do
   let(:ip_info) { create(:ip_info) }
   let(:visited_at) { Time.zone.now }
   let(:time_format) { '%Y.%m.%D %H:%M:%S' }
+  let(:ip_location) { double(:ip_location) }
+
+  before do
+    allow(IpLocation).to receive(:new)
+      .and_return(ip_location)
+
+    allow(ip_location).to receive(:coordinates)
+      .and_return([])
+
+    allow(ip_location).to receive(:vpn?).and_return(false)
+  end
 
   describe 'POST /visits' do
     scenario 'with unsuccessful params' do
