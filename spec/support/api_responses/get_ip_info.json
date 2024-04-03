@@ -1,0 +1,42 @@
+{
+  "input": "213.152.176.135",
+  "data": {
+    "ip": "213.152.176.135",
+    "hostname": "connected-by.global-layer.com",
+    "city": "Amsterdam",
+    "region": "North Holland",
+    "country": "NL",
+    "loc": "52.3740,4.8897",
+    "org": "AS49453 Global Layer B.V.",
+    "postal": "1012",
+    "timezone": "Europe/Amsterdam",
+    "asn": {
+      "asn": "AS49453",
+      "name": "Global Layer B.V.",
+      "domain": "global-layer.com",
+      "route": "213.152.176.0/24",
+      "type": "hosting"
+    },
+    "company": {
+      "name": "Global Layer B.V.",
+      "domain": "global-layer.com",
+      "type": "hosting"
+    },
+    "privacy": {
+      "vpn": true,
+      "proxy": false,
+      "tor": false,
+      "relay": false,
+      "hosting": true,
+      "service": "AirVPN"
+    },
+    "abuse": {
+      "address": "Postbus 190, 2950 AD Alblasserdam, The Netherlands",
+      "country": "NL",
+      "email": "abuse@global-layer.com",
+      "name": "GLOBAL LAYER",
+      "network": "213.152.176.0/24",
+      "phone": ""
+    }
+  }
+}
