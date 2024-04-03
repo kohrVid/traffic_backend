@@ -14,7 +14,7 @@ class IpInfo < ApplicationRecord
 
   def get_location_data
     return if loopback?
-    return if latitude && longitude && is_vpn
+    return if latitude && longitude
 
     ip_location = IpLocation.new(ip_address: address)
     lat, lon = ip_location.coordinates
