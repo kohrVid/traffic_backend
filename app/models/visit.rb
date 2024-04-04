@@ -7,6 +7,8 @@ class Visit < ApplicationRecord
 
   before_validation :find_or_create_ip_info
 
+  delegate :address, :latitude, :longitude, to: :ip_info
+
   private
 
   def find_or_create_ip_info

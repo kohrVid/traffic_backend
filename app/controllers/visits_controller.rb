@@ -1,4 +1,12 @@
 class VisitsController < ApplicationController
+  def index
+    @visits = Visit.includes(:ip_info).all.map do |visit|
+      VisitSerializer.new(visit).serializable_hash
+    end
+
+    render json: { data: @visits }, status: :ok
+  end
+
   def create
     @visit = Visit.build(visit_params)
 
