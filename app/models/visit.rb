@@ -9,6 +9,8 @@ class Visit < ApplicationRecord
 
   delegate :address, :latitude, :longitude, to: :ip_info
 
+  scope :for_page, -> (page_id) { where(page_id: page_id) }
+
   private
 
   def find_or_create_ip_info

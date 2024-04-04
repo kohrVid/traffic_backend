@@ -1,6 +1,13 @@
 class VisitsController < ApplicationController
   def index
-    @visits = Visit.includes(:ip_info).all.map do |visit|
+    page_id = params[:page_id]
+    from_time = params[:from]&.to_time || Time.new(0)
+    to_time = params[:to]&.to_time || Time.zone.now
+
+    visits = Visit.includes(:ip_info).where(visited_at: [from_time..to_time])
+    visits = visits.for_page(page_id) if page_id.present?
+
+    @visits = visits&.map do |visit|
       VisitSerializer.new(visit).serializable_hash
     end
 
