@@ -7,6 +7,7 @@ gem "pg", "~> 1.5.6"
 gem "puma", ">= 5.0"
 
 gem 'bootsnap', require: false
+gem 'devise', github: 'heartcombo/devise'
 gem 'faraday'
 gem 'rack-cors'
 gem 'tzinfo-data', platforms: %i[ windows jruby ]

@@ -6,7 +6,15 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   # Defines the root path route ("/")
-  # root "posts#index"
+  root 'pages#index'
   resources :pages, only: [:index]
   resources :visits, only: [:index, :create]
+
+  devise_for :users, controllers: {
+    sessions: 'devise/sessions',
+    registrations: 'devise/registrations',
+    passwords: 'devise/passwords',
+    confirmations: 'devise/confirmations',
+    unlocks: 'devise/unlocks'
+  }
 end
