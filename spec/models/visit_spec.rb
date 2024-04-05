@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Visit, type: :model do
-  subject { build(:visit, user: user) }
+  subject { build(:visit, :with_ip_info, user: user) }
   let(:ip_location) { double(:ip_location) }
 
   before do

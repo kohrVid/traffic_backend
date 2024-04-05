@@ -24,7 +24,6 @@ RSpec.describe "Visits", type: :request do
     let(:visit1) do
       create(
         :visit,
-        user: user,
         ip_info: ip_info,
         visited_at: Time.local(2024, 4, 3, 15)
       )
@@ -33,7 +32,6 @@ RSpec.describe "Visits", type: :request do
     let(:visit2) do
       create(
         :visit,
-        user: user,
         ip_info: ip_info,
         page: page,
         visited_at: Time.local(2024, 4, 4, 2, 50)
@@ -43,7 +41,6 @@ RSpec.describe "Visits", type: :request do
     let(:visit3) do
       create(
         :visit,
-        user: user,
         ip_info: ip_info,
         visited_at: Time.local(2024, 4, 3, 14, 49)
       )
