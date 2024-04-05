@@ -1,8 +1,10 @@
 FactoryBot.define do
   factory :visit do
     association :page
-    association :user
-    association :ip_info
     visited_at { Time.now }
+
+    trait :with_ip_info do
+      association :ip_info
+    end
   end
 end
