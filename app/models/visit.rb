@@ -11,6 +11,10 @@ class Visit < ApplicationRecord
 
   scope :for_page, -> (page_id) { where(page_id: page_id) }
 
+  scope :visited_between, -> (start_time, end_time) {
+    where(visited_at: [start_time...end_time])
+  }
+
   private
 
   def find_or_create_ip_info

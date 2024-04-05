@@ -4,7 +4,7 @@ class VisitsController < ApplicationController
     from_time = params[:from]&.to_time || Time.new(0)
     to_time = params[:to]&.to_time || Time.zone.now
 
-    visits = Visit.includes(:ip_info).where(visited_at: [from_time..to_time])
+    visits = Visit.includes(:ip_info).visited_between(from_time, to_time)
     visits = visits.for_page(page_id) if page_id.present?
 
     @visits = visits&.map do |visit|
