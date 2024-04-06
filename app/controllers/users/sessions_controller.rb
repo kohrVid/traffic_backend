@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 class Users::SessionsController < Devise::SessionsController
+  include ActionController::MimeResponds
   # before_action :configure_sign_in_params, only: [:create]
+
+  respond_to :json
 
   # GET /resource/sign_in
   # def new
