@@ -1,8 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  subject { create(:user) }
-
   describe 'validations' do
     describe ':username' do
       context 'when it is missing or blank' do
@@ -24,12 +22,13 @@ RSpec.describe User, type: :model do
       end
 
       context 'when a record with the same username already exists' do
+        let(:existing_user) { create(:user) }
         let(:new_user) do
-          User.new(username: subject.username)
+          User.new(username: existing_user.username)
         end
 
         before do
-          subject
+          existing_user
           new_user.save
         end
 
