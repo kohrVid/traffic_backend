@@ -14,7 +14,7 @@ class User < ApplicationRecord
 
   def find_or_create_ip_info
     self.registration_ip_info = IpInfo.find_or_create_by(
-      address: registration_ip_info.address
+      address: registration_ip_info&.address
     )
   end
 end
