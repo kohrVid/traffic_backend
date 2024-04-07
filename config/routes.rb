@@ -17,4 +17,8 @@ Rails.application.routes.draw do
     confirmations: 'devise/confirmations',
     unlocks: 'devise/unlocks'
   }
+
+  devise_scope :user do
+    get 'users/auth', to: 'users/sessions#show'
+  end
 end

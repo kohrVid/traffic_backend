@@ -12,14 +12,36 @@ class Users::SessionsController < Devise::SessionsController
   # end
 
   # POST /resource/sign_in
-  # def create
-  #   super
-  # end
+  def create
+    self.resource = warden.authenticate(auth_options)
+
+    if self.resource.nil?
+      render json: { errors: ['failed authentication'] }, status: :unauthorized
+
+      return
+    end
+
+    sign_in self.resource
+    session[:user_id] = self.resource.id
+    render json: { data: 'successfully logged in' }, status: :created
+  end
 
   # DELETE /resource/sign_out
   # def destroy
   #   super
   # end
+
+  def show
+    if user_signed_in? && current_user
+      data = { current_user: current_user.username, id: current_user.id }
+      data[:is_admin] = current_user.is_admin?
+      headers['Last-Modified'] = Time.now.httpdate
+
+      render json: { data: data }, status: :ok
+    else
+      render json: { errors: ["unauthorised"] }, status: :unauthorized
+    end
+  end
 
   # protected
 
