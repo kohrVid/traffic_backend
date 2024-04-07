@@ -10,6 +10,7 @@ gem 'bootsnap', require: false
 gem 'devise', github: 'heartcombo/devise'
 gem 'faraday'
 gem 'rack-cors'
+gem 'rswag'
 gem 'tzinfo-data', platforms: %i[ windows jruby ]
 
 group :development, :test do
