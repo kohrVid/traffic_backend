@@ -3,7 +3,297 @@ openapi: 3.0.1
 info:
   title: API V1
   version: v1
-paths: {}
+paths:
+  "/pages":
+    get:
+      summary: list pages
+      tags:
+      - Pages
+      responses:
+        '200':
+          description: pages found
+          content:
+            application/json:
+              examples:
+                success response:
+                  value:
+                  - id: 1
+                    name: about
+                    url: http://localhost:1234/about
+                  - id: 2
+                    name: contact
+                    url: http://localhost:1234/about
+  "/users":
+    post:
+      summary: new user registration
+      tags:
+      - Users
+      parameters: []
+      responses:
+        '201':
+          description: user created
+          content:
+            application/json:
+              examples:
+                success response:
+                  value:
+                    data:
+                      id: 1
+                      username: cleo
+                      email: cleo@kohrvid.com
+                      is_admin: false
+                      registration_ip_info_id: 2
+                      created_at: '2024-04-07T17:13:30.981Z'
+                      updated_at: '2024-04-07T17:13:30.981Z'
+        '422':
+          description: unprocessable content
+          content:
+            application/json:
+              examples:
+                missing email:
+                  value:
+                    errors:
+                    - email:
+                      - can't be blank
+                missing username:
+                  value:
+                    errors:
+                    - username:
+                      - can't be blank
+                missing password:
+                  value:
+                    errors:
+                    - password:
+                      - can't be blank
+                missing IP address:
+                  value:
+                    errors:
+                    - registration_ip_info.address:
+                      - can't be blank
+                duplicate email:
+                  value:
+                    errors:
+                    - email:
+                      - has already been taken
+                duplicate username:
+                  value:
+                    errors:
+                    - username:
+                      - has already been taken
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                      default: cleo@kohrvid.com
+                    username:
+                      type: string
+                      default: cleo
+                    password:
+                      type: string
+                      default: Password1234!
+                    password_confirmation:
+                      type: string
+                      default: Password1234!
+                    registration_ip_info_attributes:
+                      type: object
+                      properties:
+                        address:
+                          type: string
+                          default: 213.152.176.135
+                  required:
+                  - username
+                  - email
+                  - password
+                  - password_confirmation
+                  - registration_ip_info_attributes
+              required:
+              - user
+  "/users/auth":
+    get:
+      summary: authenticate user
+      tags:
+      - Users
+      responses:
+        '200':
+          description: user authenticated
+          content:
+            application/json:
+              examples:
+                success response:
+                  value:
+                    data:
+                      id: 1
+                      current_user: cleo
+                      is_admin: false
+        '401':
+          description: unauthorised
+          content:
+            application/json:
+              examples:
+                failure response:
+                  value:
+                    errors:
+                    - unauthorised
+  "/users/sign_in":
+    post:
+      summary: sign in user
+      tags:
+      - Users
+      parameters: []
+      responses:
+        '201':
+          description: user signed in
+          content:
+            application/json:
+              examples:
+                success response:
+                  value:
+                    data: successfully logged in
+        '401':
+          description: unauthorised
+          content:
+            application/json:
+              examples:
+                failure response:
+                  value:
+                    errors:
+                    - failed authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                      default: cleo@kohrvid.com
+                    password:
+                      type: string
+                      default: Password1234!
+                  required:
+                  - email
+                  - password
+        required: true
+  "/users/sign_out":
+    delete:
+      summary: sign out user
+      tags:
+      - Users
+      responses:
+        '204':
+          description: user signed out
+          content:
+            application/json:
+              examples:
+                success response: {}
+  "/visits":
+    get:
+      summary: list visits
+      tags:
+      - Visits
+      parameters:
+      - name: page_id
+        in: query
+        required: false
+        schema:
+          type: integer
+      - name: from
+        in: query
+        required: false
+        default: 2024-04-06T16:13
+        schema:
+          type: string
+      - name: to
+        in: query
+        required: false
+        default: 2024-04-07T16:13
+        schema:
+          type: string
+      responses:
+        '200':
+          description: visits found
+          content:
+            application/json:
+              examples:
+                success response:
+                  value:
+                  - page_id: 143
+                    user_id:
+                    visited_at: 2024.04.03 13:00:00
+                    ip_address: 213.152.176.135
+                    latitude: 52.374
+                    longitude: 4.8897
+                  - page_id: 142
+                    user_id:
+                    visited_at: 2024.04.04 00:50:00
+                    ip_address: 213.152.176.135
+                    latitude: 52.374
+                    longitude: 4.8897
+    post:
+      summary: create visit
+      tags:
+      - Visits
+      parameters: []
+      responses:
+        '201':
+          description: visit created
+          content:
+            application/json:
+              examples:
+                success response:
+                  value:
+                    data:
+                      page_id: 1
+                      user_id:
+                      visited_at: 2024.04.07 19:05:59
+                      ip_address: 213.152.176.135
+                      latitude: 52.374
+                      longitude: 4.8897
+        '400':
+          description: bad request
+          content:
+            application/json:
+              examples:
+                failure response:
+                  value:
+                    errors:
+                    - an error has prevented the visit from being saved
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                page_id:
+                  type: integer
+                  default: 1
+                user_id:
+                  type: integer
+                  default:
+                visited_at:
+                  type: string
+                  default: 2024.04.07 19:05:59
+                ip_info_attributes:
+                  type: object
+                  properties:
+                    address:
+                      type: string
+                      default: 213.152.176.135
+              required:
+              - page_id
+              - visited_at
+              - ip_info_attributes
+        required: true
 servers:
 - url: http://localhost:3000
   variables:
