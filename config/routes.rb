@@ -11,8 +11,8 @@ Rails.application.routes.draw do
   resources :visits, only: [:index, :create]
 
   devise_for :users, controllers: {
+    registrations: 'users/registrations',
     sessions: 'devise/sessions',
-    registrations: 'devise/registrations',
     passwords: 'devise/passwords',
     confirmations: 'devise/confirmations',
     unlocks: 'devise/unlocks'
