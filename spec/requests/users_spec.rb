@@ -16,6 +16,58 @@ RSpec.describe 'Users', type: :request do
     allow(ip_location).to receive(:vpn?).and_return(false)
   end
 
+  path '/users' do
+    get 'list users' do
+      tags 'Users'
+      consumes 'application/json'
+      produces 'application/json'
+
+      user_attributes = FactoryBot.attributes_for(
+        :user,
+        registration_ip_info: IpInfo.find_or_create_by(
+          FactoryBot.attributes_for(:ip_info)
+        )
+      )
+
+      user = User.create(user_attributes)
+      admin_user = FactoryBot.create(:user, :random_name, is_admin: true)
+
+      response '200', 'users found' do
+        let(:id) { User.create(user_attributes).id }
+
+        before { sign_in admin_user }
+
+        example 'application/json', 'success response', {
+          data: [{
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            is_admin: user.is_admin,
+            registration_ip_info: {
+              address: user.registration_ip_info.address,
+              latitude: user.registration_ip_info.latitude,
+              longitude: user.registration_ip_info.longitude
+            },
+            created_at: user.created_at,
+            updated_at: user.updated_at
+          }]
+        }
+
+        run_test!
+      end
+
+      response '403', 'forbidden' do
+        example 'application/json', 'failure response', {
+          errors: [
+            'forbidden'
+          ]
+        }
+
+        run_test!
+      end
+    end
+  end
+
   path '/users/{id}' do
     get 'user' do
       tags 'Users'

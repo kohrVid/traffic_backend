@@ -8,4 +8,18 @@ class UsersController < ApplicationController
 
     render json: { data: UserSerializer.new(@user).serializable_hash }, status: :ok
   end
+
+  def index
+    @users = User.all
+
+    data = @users&.map do |user|
+      UserSerializer.new(user).serializable_hash
+    end
+
+    if current_user&.is_admin
+      render json: { data: }, status: :ok
+    else
+      render json: { error: 'forbidden' }, status: :forbidden
+    end
+  end
 end
