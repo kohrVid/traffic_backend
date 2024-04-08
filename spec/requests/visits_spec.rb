@@ -1,11 +1,7 @@
 require 'rails_helper'
+require 'swagger_helper'
 
-RSpec.describe "Visits", type: :request do
-  let(:page) { create(:page, name: 'contact') }
-  let(:user) { create(:user) }
-  let(:ip_info) { create(:ip_info) }
-  let(:visited_at) { Time.zone.now }
-  let(:time_format) { '%Y.%m.%d %H:%M:%S' }
+RSpec.describe 'Visits', type: :request do
   let(:ip_location) { double(:ip_location) }
 
   before do
@@ -16,169 +12,169 @@ RSpec.describe "Visits", type: :request do
       .and_return([])
 
     allow(ip_location).to receive(:vpn?).and_return(false)
+
+    FactoryBot.create(:page)
   end
 
-  describe 'GET /index' do
-    let(:time_format) { '%Y-%m-%dT%H:%M:%S.%LZ' }
+  path '/visits' do
+    get 'list visits' do
+      tags 'Visits'
+      consumes 'application/json'
+      produces 'application/json'
 
-    let(:visit1) do
-      create(
+      time_format = '%Y.%m.%d %H:%M:%S'
+      page = Page.find_or_create_by(FactoryBot.attributes_for(:page))
+
+      ip_info = IpInfo.find_or_create_by(
+        FactoryBot.attributes_for(:ip_info)
+      )
+
+      visit1 = FactoryBot.create(
         :visit,
         ip_info: ip_info,
         visited_at: Time.local(2024, 4, 3, 15)
       )
-    end
 
-    let(:visit2) do
-      create(
+      visit2 = FactoryBot.create(
         :visit,
         ip_info: ip_info,
         page: page,
         visited_at: Time.local(2024, 4, 4, 2, 50)
       )
-    end
 
-    let(:visit3) do
-      create(
+      visit3 = FactoryBot.create(
         :visit,
         ip_info: ip_info,
         visited_at: Time.local(2024, 4, 3, 14, 49)
       )
+
+      parameter name: :page_id, in: :query, type: :integer, required: false
+
+      parameter name: :from, in: :query, type: :string, required: false,
+        default: '2024-04-06T16:13'
+
+      parameter name: :to, in: :query, type: :string, required: false,
+        default: '2024-04-07T16:13'
+
+      response '200', 'visits found' do
+        example 'application/json', 'success response', [
+          {
+            page_id: visit1.page_id,
+            user_id: nil,
+            visited_at: visit1.visited_at.strftime(time_format),
+            ip_address: visit1.address,
+            latitude: visit1.latitude.to_f,
+            longitude: visit1.longitude.to_f
+          },
+          {
+            page_id: visit2.page_id,
+            user_id: visit2.user_id,
+            visited_at: visit2.visited_at.strftime(time_format),
+            ip_address: visit2.address,
+            latitude: visit2.latitude.to_f,
+            longitude: visit2.longitude.to_f
+          }
+        ]
+
+        run_test!
+      end
     end
 
-    before do
-      visit1
-      visit2
-    end
+    post 'create visit' do
+      tags 'Visits'
+      consumes 'application/json'
+      produces 'application/json'
 
-    scenario 'without a query string' do
-      get visits_path
+      visited_at = Time.zone.now
+      time_format = '%Y.%m.%d %H:%M:%S'
+      page = Page.find_or_create_by(FactoryBot.attributes_for(:page))
 
-      expect(response).to have_http_status(200)
-      expect(
-        JSON.parse(response.body)
-      ).to include("data" => [
-        {
-          "page_id" => visit1.page_id,
-          "user_id" => visit1.user_id,
-          "visited_at" => visit1.visited_at.strftime(time_format),
-          "ip_address" => visit1.address,
-          "latitude" => visit1.latitude.to_f,
-          "longitude" => visit1.longitude.to_f
-        },
-        {
-          "page_id" => visit2.page_id,
-          "user_id" => visit2.user_id,
-          "visited_at" => visit2.visited_at.strftime(time_format),
-          "ip_address" => visit2.address,
-          "latitude" => visit2.latitude.to_f,
-          "longitude" => visit2.longitude.to_f
-        }
-      ])
-    end
+      ip_info = IpInfo.find_or_create_by(
+        FactoryBot.attributes_for(:ip_info)
+      )
 
-    scenario 'with a query string' do
-      get visits_path,
-        params: {
-          page_id: page.id,
-          from: Time.local(2024, 4, 3, 14, 50),
-          to: Time.local(2024, 4, 5, 14, 50)
-        }
+      visit_attributes = FactoryBot.attributes_for(
+        :visit,
+        page_id: page.id,
+        ip_info: ip_info,
+        visited_at: visited_at
+      )
 
-      expect(response).to have_http_status(200)
-      expect(
-        JSON.parse(response.body)
-      ).to include("data" => [
-        {
-          "page_id" => visit2.page_id,
-          "user_id" => visit2.user_id,
-          "visited_at" => visit2.visited_at.strftime(time_format),
-          "ip_address" => visit2.address,
-          "latitude" => visit2.latitude.to_f,
-          "longitude" => visit2.longitude.to_f
-        }
-      ])
-    end
-  end
-
-  describe 'POST /visits' do
-    scenario 'with unsuccessful params' do
-      post visits_path,
-        params: {
-          visit: {
-            page_id: page.id,
-            user_id: user.id,
-            visited_at: visited_at,
-            ip_info_attributes: {
-              address: nil
+      parameter name: :visit, in: :body, schema: {
+        type: :object,
+        properties: {
+          page_id: {
+            type: :integer,
+            default: visit_attributes[:page_id]
+          },
+          user_id: {
+            type: :integer,
+            default: nil
+          },
+          visited_at: {
+            type: :string,
+            default: visited_at.strftime(time_format)
+          },
+          ip_info_attributes: {
+            type: :object,
+            properties: {
+              address: {
+                type: :string,
+                default: ip_info.address
+              }
             }
           }
-        }
+        },
+        required: [:page_id, :visited_at, :ip_info_attributes]
+      }, required: true
 
-      expect(response).to have_http_status(400)
+      response '201', 'visit created' do
+        before do
+        page = Page.find_or_create_by(FactoryBot.attributes_for(:page))
+        end
 
-      expect(
-        JSON.parse(response.body)
-      ).to include(
-        "errors" => ["an error has prevented the visit from being saved"]
-      )
-    end
-
-    scenario 'the IP address already exists in the database' do
-      post visits_path,
-        params: {
-          visit: {
+        let(:visit) do
+          {
             page_id: page.id,
-            user_id: user.id,
-            visited_at: visited_at,
+            user_id: nil,
+            visited_at: visited_at.strftime(time_format),
             ip_info_attributes: {
               address: ip_info.address
             }
           }
-        }
+        end
 
-      expect(response).to have_http_status(201)
-
-      expect(
-        JSON.parse(response.body)
-      ).to include("data" => Visit.last.to_json)
-
-      expect(Visit.last.visited_at.strftime(time_format)).to eq(
-        visited_at.strftime(time_format)
-      )
-
-      expect(Visit.last.page).to eq(page)
-      expect(Visit.last.user).to eq(user)
-      expect(Visit.last.ip_info).to eq(ip_info)
-    end
-
-    scenario 'the IP address does not already exist in the database' do
-      post visits_path,
-        params: {
-          visit: {
-            page_id: page.id,
-            user_id: user.id,
-            visited_at: visited_at,
-            ip_info_attributes: {
-              address: '56.235.4.155'
-            }
+        example 'application/json', 'success response', {
+          data: {
+            page_id: visit_attributes[:page_id],
+            user_id: visit_attributes[:user_id],
+            visited_at: visit_attributes[:visited_at].strftime(time_format),
+            ip_address: ip_info.address,
+            latitude: visit_attributes[:latitude].to_f,
+            longitude: visit_attributes[:longitude].to_f
           }
         }
 
-      expect(response).to have_http_status(201)
+        run_test!
+      end
 
-      expect(
-        JSON.parse(response.body)
-      ).to include("data" => Visit.last.to_json)
+      response '400', 'bad request' do
+        let(:visit) do
+          {
+            page_id: visit_attributes[:page_id],
+            user_id: nil,
+            visited_at: visited_at.strftime(time_format),
+          }
+        end
 
-      expect(Visit.last.visited_at.strftime(time_format)).to eq(
-        visited_at.strftime(time_format)
-      )
+        example 'application/json', 'failure response', {
+          errors: [
+            "an error has prevented the visit from being saved"
+          ]
+        }
 
-      expect(Visit.last.page).to eq(page)
-      expect(Visit.last.user).to eq(user)
-      expect(Visit.last.ip_info).to eq(IpInfo.last)
-      expect(IpInfo.last.address).to eq('56.235.4.155')
+        run_test!
+      end
     end
   end
 end

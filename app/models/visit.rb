@@ -18,6 +18,6 @@ class Visit < ApplicationRecord
   private
 
   def find_or_create_ip_info
-    self.ip_info = IpInfo.find_or_create_by(address: ip_info.address)
+    self.ip_info = IpInfo.find_or_create_by(address: ip_info&.address)
   end
 end

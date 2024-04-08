@@ -7,14 +7,14 @@ gem "pg", "~> 1.5.6"
 gem "puma", ">= 5.0"
 
 gem 'bootsnap', require: false
+gem 'devise', github: 'heartcombo/devise'
 gem 'faraday'
+gem 'rack-cors'
+gem 'rswag'
 gem 'tzinfo-data', platforms: %i[ windows jruby ]
 
-
-# Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
-# gem "rack-cors"
-
 group :development, :test do
+  gem 'database_cleaner'
   gem 'debug', platforms: %i[ mri windows ]
   gem 'factory_bot_rails'
   gem 'rspec-rails', '~> 6.1.0'

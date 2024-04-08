@@ -8,6 +8,7 @@ This is the backend repo for the Traffic application
 * [Requirements](#requirements)
 * [Development](#development)
   * [Tests](#tests)
+  * [Swagger](#swagger)
 
 <!-- vim-markdown-toc -->
 
@@ -47,3 +48,17 @@ Unit tests can be run with rspec:
 or with their test descriptions:
 
     rspec -f documentation
+
+### Swagger
+
+rswag is used for Swagger documentation. It depends on a number of request
+specs in the test suite. After changes are made to these tests the following
+command will generate the documentation (`swagger/v1/swagger.yaml`):
+
+    rails rswag:specs:swaggerize
+
+The docs can then be found at http://localhost:3000/api-docs
+
+This command will run the spec files with rspec and check expectations:
+
+    SWAGGER_DRY_RUN=0 rails rswag:specs:swaggerize

@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe Visit, type: :model do
-  subject { build(:visit, :with_ip_info, user: user) }
   let(:ip_location) { double(:ip_location) }
 
   before do
@@ -12,18 +11,6 @@ RSpec.describe Visit, type: :model do
       .and_return([])
 
     allow(ip_location).to receive(:vpn?).and_return(false)
-  end
-
-  describe 'validations' do
-    describe ':user_id' do
-      context 'when it is missing' do
-        let(:user) { nil }
-
-        before { subject.save }
-
-        it { is_expected.to be_valid }
-      end
-    end
   end
 
   describe '.for_page' do
@@ -93,6 +80,50 @@ RSpec.describe Visit, type: :model do
 
     it 'does not return visits for other pages' do
       expect(subject).not_to include(visit3)
+    end
+  end
+
+  describe 'validations' do
+    describe ':user_id' do
+      context 'when it is missing' do
+        subject { build(:visit, :with_ip_info, user: nil) }
+        before { subject.save }
+
+        it { is_expected.to be_valid }
+      end
+    end
+  end
+
+  describe '#save' do
+    subject do
+      build(:visit, ip_info_attributes: { address: ip_address })
+    end
+
+    let(:ip_info) { create(:ip_info) }
+    let(:ip_address) { ip_info.address }
+
+    before do
+      ip_info
+      subject.save
+    end
+
+    it 'associates the Visit with an IpInfo record' do
+      expect(subject.ip_info).to be_a(IpInfo)
+    end
+
+    context 'when the IP address already exists in the database' do
+      it 'associates the Visit with an existing IpInfo record' do
+        expect(subject.ip_info).to eq(ip_info)
+      end
+    end
+
+    context 'when the IP address does not exist in the database' do
+      let(:ip_address) { '213.152.176.139' }
+
+      it 'associates the Visit with a new IpInfo record' do
+        expect(subject.ip_info).to eq(IpInfo.last)
+        expect(subject.ip_info.address).to eq(ip_address)
+      end
     end
   end
 end
