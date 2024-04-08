@@ -31,6 +31,12 @@ Metrics/MethodLength:
   Enabled: true
   Exclude:
     - 'app/controllers/users/registrations_controller.rb'
+    - 'app/serializers/*'
+
+Naming/PredicateName:
+  Enabled: true
+  Exclude:
+    - 'app/serializers/*'
 
 Style/BlockDelimiters:
   Enabled: false

@@ -20,7 +20,7 @@ class VisitsController < ApplicationController
     @visit = Visit.build(visit_params)
 
     if @visit.save
-      render json: { 
+      render json: {
         data: VisitSerializer.new(@visit).serializable_hash
       }, status: :created
     else

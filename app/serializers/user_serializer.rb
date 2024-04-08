@@ -40,9 +40,9 @@ class UserSerializer
 
   def registration_ip_info
     {
-      address: @user&.registration_ip_info[:address],
-      latitude: @user&.registration_ip_info[:latitude],
-      longitude: @user&.registration_ip_info[:longitude]
+      address: @user&.registration_ip_info&.[](:address),
+      latitude: @user&.registration_ip_info&.[](:latitude),
+      longitude: @user&.registration_ip_info&.[](:longitude)
     }
   end
 
