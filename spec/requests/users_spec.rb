@@ -42,7 +42,11 @@ RSpec.describe 'Users', type: :request do
             username: user.username,
             email: user.email,
             is_admin: user.is_admin,
-            registration_ip_info_id: user.registration_ip_info_id,
+            registration_ip_info: {
+              address: user.registration_ip_info.address,
+              latitude: user.registration_ip_info.latitude,
+              longitude: user.registration_ip_info.longitude
+            },
             created_at: user.created_at,
             updated_at: user.updated_at
           }
