@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'swagger_helper'
 
@@ -28,7 +30,7 @@ RSpec.describe 'Users::Sessions', type: :request do
       )
 
       user = User.find_by(username: user_attributes[:username]) ||
-        User.create(user_attributes)
+             User.create(user_attributes)
 
       response '200', 'user authenticated' do
         before { sign_in user }
@@ -47,7 +49,7 @@ RSpec.describe 'Users::Sessions', type: :request do
       response '401', 'unauthorised' do
         example 'application/json', 'failure response', {
           errors: [
-            "unauthorised"
+            'unauthorised'
           ]
         }
 
@@ -65,24 +67,24 @@ RSpec.describe 'Users::Sessions', type: :request do
       user_attributes = FactoryBot.attributes_for(:user, :random_name)
       before { User.create(user_attributes) }
 
-      parameter name: :body, in: :body, schema: { 
+      parameter name: :body, in: :body, schema: {
         type: :object,
         properties: {
           user: {
             type: :object,
             properties: {
-              email: { 
+              email: {
                 type: :string,
                 default: user_attributes[:email]
               },
-              password: { 
+              password: {
                 type: :string,
                 default: user_attributes[:password]
-              },
+              }
             },
-            required: [
-              :email,
-              :password
+            required: %i[
+              email
+              password
             ]
           }
         }
@@ -99,7 +101,7 @@ RSpec.describe 'Users::Sessions', type: :request do
         end
 
         example 'application/json', 'success response', {
-          data: "successfully logged in"
+          data: 'successfully logged in'
         }
 
         run_test!
@@ -117,7 +119,7 @@ RSpec.describe 'Users::Sessions', type: :request do
 
         example 'application/json', 'failure response', {
           errors: [
-            "failed authentication"
+            'failed authentication'
           ]
         }
 
@@ -137,7 +139,7 @@ RSpec.describe 'Users::Sessions', type: :request do
       response '204', 'user signed out' do
         before { sign_in user }
 
-        example 'application/json', 'success response', { }
+        example 'application/json', 'success response', {}
 
         run_test!
       end

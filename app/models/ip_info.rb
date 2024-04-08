@@ -1,8 +1,11 @@
+# frozen_string_literal: true
+
+# This model is used persist geolocation data about a given IP address
 class IpInfo < ApplicationRecord
   has_many :registered_users, class_name: 'User'
   has_many :visits
 
-  after_create :get_location_data
+  after_create :set_location_data
 
   validates :address, presence: true, uniqueness: { case_sensitive: false }
 
@@ -12,7 +15,7 @@ class IpInfo < ApplicationRecord
 
   private
 
-  def get_location_data
+  def set_location_data
     return if loopback?
     return if latitude && longitude
 
@@ -23,7 +26,7 @@ class IpInfo < ApplicationRecord
     update(
       latitude: lat,
       longitude: lon,
-      is_vpn: is_vpn
+      is_vpn:
     )
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'swagger_helper'
 
@@ -31,34 +33,35 @@ RSpec.describe 'Visits', type: :request do
 
       visit1 = FactoryBot.create(
         :visit,
-        ip_info: ip_info,
+        ip_info:,
         visited_at: Time.local(2024, 4, 3, 15)
       )
 
       visit2 = FactoryBot.create(
         :visit,
-        ip_info: ip_info,
-        page: page,
+        ip_info:,
+        page:,
         visited_at: Time.local(2024, 4, 4, 2, 50)
       )
 
-      visit3 = FactoryBot.create(
+      FactoryBot.create(
         :visit,
-        ip_info: ip_info,
+        ip_info:,
         visited_at: Time.local(2024, 4, 3, 14, 49)
       )
 
       parameter name: :page_id, in: :query, type: :integer, required: false
 
       parameter name: :from, in: :query, type: :string, required: false,
-        default: '2024-04-06T16:13'
+                default: '2024-04-06T16:13'
 
       parameter name: :to, in: :query, type: :string, required: false,
-        default: '2024-04-07T16:13'
+                default: '2024-04-07T16:13'
 
       response '200', 'visits found' do
         example 'application/json', 'success response', [
           {
+            id: visit1.id,
             page_id: visit1.page_id,
             user_id: nil,
             visited_at: visit1.visited_at.strftime(time_format),
@@ -67,6 +70,7 @@ RSpec.describe 'Visits', type: :request do
             longitude: visit1.longitude.to_f
           },
           {
+            id: visit2.id,
             page_id: visit2.page_id,
             user_id: visit2.user_id,
             visited_at: visit2.visited_at.strftime(time_format),
@@ -96,8 +100,8 @@ RSpec.describe 'Visits', type: :request do
       visit_attributes = FactoryBot.attributes_for(
         :visit,
         page_id: page.id,
-        ip_info: ip_info,
-        visited_at: visited_at
+        ip_info:,
+        visited_at:
       )
 
       parameter name: :visit, in: :body, schema: {
@@ -125,12 +129,12 @@ RSpec.describe 'Visits', type: :request do
             }
           }
         },
-        required: [:page_id, :visited_at, :ip_info_attributes]
+        required: %i[page_id visited_at ip_info_attributes]
       }, required: true
 
       response '201', 'visit created' do
         before do
-        page = Page.find_or_create_by(FactoryBot.attributes_for(:page))
+          page = Page.find_or_create_by(FactoryBot.attributes_for(:page))
         end
 
         let(:visit) do
@@ -163,13 +167,13 @@ RSpec.describe 'Visits', type: :request do
           {
             page_id: visit_attributes[:page_id],
             user_id: nil,
-            visited_at: visited_at.strftime(time_format),
+            visited_at: visited_at.strftime(time_format)
           }
         end
 
         example 'application/json', 'failure response', {
           errors: [
-            "an error has prevented the visit from being saved"
+            'an error has prevented the visit from being saved'
           ]
         }
 

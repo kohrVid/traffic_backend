@@ -1,3 +1,7 @@
+# frozen_string_literal: true
+
+# Serialiser for page records. The Page model represents the pages in the
+# frontend that have tracking enabled
 class PageSerializer
   include ActiveModel::Serialization
 

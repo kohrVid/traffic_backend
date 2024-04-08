@@ -49,6 +49,10 @@ or with their test descriptions:
 
     rspec -f documentation
 
+SimpleCov has been added to provide coverage statistics after each run. Reports
+can be found at `coverage/index.html`
+
+
 ### Swagger
 
 rswag is used for Swagger documentation. It depends on a number of request

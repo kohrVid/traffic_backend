@@ -1,5 +1,9 @@
+# frozen_string_literal: true
+
 require 'faraday'
 
+# The IpLocation service is used to query the ipinfo.io API and obtain
+# geolocation data about a given IP address
 class IpLocation
   def initialize(ip_address:)
     @ip_address = ip_address
@@ -24,8 +28,8 @@ class IpLocation
     uri = URI(url)
 
     conn = Faraday.new(
-      url: url,
-      headers: { "Content-Type" => "application/json" },
+      url:,
+      headers: { 'Content-Type' => 'application/json' },
       request: { timeout: 1 }
     )
 

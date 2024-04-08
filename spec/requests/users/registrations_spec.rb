@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'swagger_helper'
 
@@ -27,44 +29,44 @@ RSpec.describe 'Users::Registrations', type: :request do
         )
       )
 
-      parameter name: :user, in: :body, schema: { 
+      parameter name: :user, in: :body, schema: {
         type: :object,
         properties: {
           user: {
             type: :object,
             properties: {
-              email: { 
+              email: {
                 type: :string,
                 default: new_user[:email]
               },
-              username: { 
+              username: {
                 type: :string,
                 default: new_user[:username]
               },
-              password: { 
+              password: {
                 type: :string,
                 default: new_user[:password]
               },
-              password_confirmation: { 
+              password_confirmation: {
                 type: :string,
                 default: new_user[:password_confirmation]
               },
               registration_ip_info_attributes: {
                 type: :object,
                 properties: {
-                  address: { 
+                  address: {
                     type: :string,
                     default: new_user[:registration_ip_info].address
                   }
                 }
               }
             },
-            required: [
-              :username,
-              :email,
-              :password,
-              :password_confirmation,
-              :registration_ip_info_attributes
+            required: %i[
+              username
+              email
+              password
+              password_confirmation
+              registration_ip_info_attributes
             ]
           }
         },
@@ -93,8 +95,8 @@ RSpec.describe 'Users::Registrations', type: :request do
             email: new_user[:email],
             is_admin: new_user[:is_admin],
             registration_ip_info_id: new_user[:registration_ip_info].id,
-            created_at: "2024-04-07T17:13:30.981Z",
-            updated_at: "2024-04-07T17:13:30.981Z"
+            created_at: '2024-04-07T17:13:30.981Z',
+            updated_at: '2024-04-07T17:13:30.981Z'
           }
         }
 
@@ -141,7 +143,7 @@ RSpec.describe 'Users::Registrations', type: :request do
         example 'application/json', 'missing IP address', {
           errors: [
             {
-              "registration_ip_info.address": [
+              'registration_ip_info.address': [
                 "can't be blank"
               ]
             }
@@ -152,7 +154,7 @@ RSpec.describe 'Users::Registrations', type: :request do
           errors: [
             {
               email: [
-                "has already been taken"
+                'has already been taken'
               ]
             }
           ]
@@ -162,7 +164,7 @@ RSpec.describe 'Users::Registrations', type: :request do
           errors: [
             {
               username: [
-                "has already been taken"
+                'has already been taken'
               ]
             }
           ]

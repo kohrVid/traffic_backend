@@ -1,3 +1,7 @@
+# frozen_string_literal: true
+
+# Serialiser for Visit records. The Visit model represents individual
+# visits to pages with tracking enabled on the frontend
 class VisitSerializer
   include ActiveModel::Serialization
 
@@ -7,6 +11,7 @@ class VisitSerializer
 
   def attributes
     {
+      id: nil,
       page_id: nil,
       user_id: nil,
       visited_at: nil,
@@ -17,6 +22,10 @@ class VisitSerializer
   end
 
   private
+
+  def id
+    @visit[:id]
+  end
 
   def page_id
     @visit[:page_id]

@@ -1,3 +1,7 @@
+# frozen_string_literal: true
+
+# The Visit model represents individual visits to pages with tracking enabled
+# on the frontend
 class Visit < ApplicationRecord
   belongs_to :page
   belongs_to :user, optional: true
@@ -9,9 +13,9 @@ class Visit < ApplicationRecord
 
   delegate :address, :latitude, :longitude, to: :ip_info
 
-  scope :for_page, -> (page_id) { where(page_id: page_id) }
+  scope :for_page, ->(page_id) { where(page_id:) }
 
-  scope :visited_between, -> (start_time, end_time) {
+  scope :visited_between, lambda { |start_time, end_time|
     where(visited_at: [start_time...end_time])
   }
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'swagger_helper'
 
@@ -32,7 +34,7 @@ RSpec.describe 'Users', type: :request do
       parameter name: :id, in: :path, type: :integer
 
       response '200', 'user found' do
-        let(:id) {  User.create(user_attributes).id }
+        let(:id) { User.create(user_attributes).id }
 
         example 'application/json', 'success response', {
           data: {
@@ -81,22 +83,22 @@ RSpec.describe 'Users', type: :request do
 
       visit1 = FactoryBot.create(
         :visit,
-        user: user,
+        user:,
         ip_info: user.registration_ip_info,
         visited_at: Time.local(2024, 4, 3, 15)
       )
 
       visit2 = FactoryBot.create(
         :visit,
-        user: user,
+        user:,
         ip_info: user.registration_ip_info,
-        page: page,
+        page:,
         visited_at: Time.local(2024, 4, 4, 2, 50)
       )
 
-      visit3 = FactoryBot.create(
+      FactoryBot.create(
         :visit,
-        user: user,
+        user:,
         ip_info: user.registration_ip_info,
         visited_at: Time.local(2024, 4, 3, 14, 49)
       )
@@ -106,13 +108,13 @@ RSpec.describe 'Users', type: :request do
       parameter name: :page_id, in: :query, type: :integer, required: false
 
       parameter name: :from, in: :query, type: :string, required: false,
-        default: '2024-04-06T16:13'
+                default: '2024-04-06T16:13'
 
       parameter name: :to, in: :query, type: :string, required: false,
-        default: '2024-04-07T16:13'
+                default: '2024-04-07T16:13'
 
       response '200', 'visits found' do
-        let(:id) {  User.create(user_attributes).id }
+        let(:id) { User.create(user_attributes).id }
 
         example 'application/json', 'success response', [
           {

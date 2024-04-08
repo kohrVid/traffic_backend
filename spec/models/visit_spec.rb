@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Visit, type: :model do
@@ -19,9 +21,9 @@ RSpec.describe Visit, type: :model do
     let(:ip_info) { create(:ip_info) }
     let(:page1) { create(:page) }
     let(:page2) { create(:page, name: 'contact') }
-    let(:visit1) { create(:visit, page: page1, ip_info: ip_info, user: user) }
-    let(:visit2) { create(:visit, page: page1, ip_info: ip_info, user: user) }
-    let(:visit3) { create(:visit, page: page2, ip_info: ip_info, user: user) }
+    let(:visit1) { create(:visit, page: page1, ip_info:, user:) }
+    let(:visit2) { create(:visit, page: page1, ip_info:, user:) }
+    let(:visit3) { create(:visit, page: page2, ip_info:, user:) }
 
     before do
       visit1
@@ -47,7 +49,7 @@ RSpec.describe Visit, type: :model do
     let(:visit1) do
       create(
         :visit,
-        ip_info: ip_info,
+        ip_info:,
         visited_at: Time.local(2024, 4, 3, 15)
       )
     end
@@ -55,7 +57,7 @@ RSpec.describe Visit, type: :model do
     let(:visit2) do
       create(
         :visit,
-        ip_info: ip_info,
+        ip_info:,
         visited_at: Time.local(2024, 4, 4, 2, 50)
       )
     end
@@ -63,7 +65,7 @@ RSpec.describe Visit, type: :model do
     let(:visit3) do
       create(
         :visit,
-        ip_info: ip_info,
+        ip_info:,
         visited_at: Time.local(2024, 4, 3, 14, 49)
       )
     end
