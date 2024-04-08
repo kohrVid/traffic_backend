@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# This class represent the Users sign up for and visit the frontend application
+# and whose records are persisted in the database
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# The VisitsController contains resources associated with the Visit model,
+# representing individual visits to pages with tracking enabled
 class VisitsController < ApplicationController
   before_action :set_visits, only: :index
 

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# This model is used persist geolocation data about a given IP address
 class IpInfo < ApplicationRecord
   has_many :registered_users, class_name: 'User'
   has_many :visits

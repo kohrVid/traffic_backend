@@ -2,6 +2,8 @@
 
 require 'faraday'
 
+# The IpLocation service is used to query the ipinfo.io API and obtain
+# geolocation data about a given IP address
 class IpLocation
   def initialize(ip_address:)
     @ip_address = ip_address

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# The Visit model represents individual visits to pages with tracking enabled
+# on the frontend
 class Visit < ApplicationRecord
   belongs_to :page
   belongs_to :user, optional: true

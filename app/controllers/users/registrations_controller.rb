@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module Users
+  # This controller mostly inherits from the Devise RegistrationsController but
+  # contains an endpoint that has been refactored to support JSON requests
   class RegistrationsController < Devise::RegistrationsController
     include ActionController::MimeResponds
     before_action :configure_sign_up_params, only: [:create]

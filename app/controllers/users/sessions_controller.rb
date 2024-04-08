@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module Users
+  # This controller mostly inherits from the Devise SessionssController but
+  # contains endpoints that have been refactored to support JSON requests
   class SessionsController < Devise::SessionsController
     include ActionController::MimeResponds
     # before_action :configure_sign_in_params, only: [:create]
