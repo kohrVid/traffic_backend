@@ -2,17 +2,32 @@ require 'rails_helper'
 require 'swagger_helper'
 
 RSpec.describe 'Visits', type: :request do
+  let(:ip_location) { double(:ip_location) }
+
+  before do
+    allow(IpLocation).to receive(:new)
+      .and_return(ip_location)
+
+    allow(ip_location).to receive(:coordinates)
+      .and_return([])
+
+    allow(ip_location).to receive(:vpn?).and_return(false)
+
+    FactoryBot.create(:page)
+  end
+
   path '/visits' do
     get 'list visits' do
       tags 'Visits'
       consumes 'application/json'
       produces 'application/json'
 
-      ip_info = IpInfo.last || FactoryBot.create(:ip_info)
-      page = Page.last || FactoryBot.create(:page)
-      user = User.last ||
-        FactoryBot.create(:user, registration_ip_info: ip_info)
       time_format = '%Y.%m.%d %H:%M:%S'
+      page = Page.find_or_create_by(FactoryBot.attributes_for(:page))
+
+      ip_info = IpInfo.find_or_create_by(
+        FactoryBot.attributes_for(:ip_info)
+      )
 
       visit1 = FactoryBot.create(
         :visit,
@@ -70,14 +85,17 @@ RSpec.describe 'Visits', type: :request do
       consumes 'application/json'
       produces 'application/json'
 
-      page = Page.first || FactoryBot.create(:page)
-      ip_info = IpInfo.last || FactoryBot.create(:ip_info)
       visited_at = Time.zone.now
       time_format = '%Y.%m.%d %H:%M:%S'
+      page = Page.find_or_create_by(FactoryBot.attributes_for(:page))
 
-      visit = FactoryBot.build(
+      ip_info = IpInfo.find_or_create_by(
+        FactoryBot.attributes_for(:ip_info)
+      )
+
+      visit_attributes = FactoryBot.attributes_for(
         :visit,
-        page: page,
+        page_id: page.id,
         ip_info: ip_info,
         visited_at: visited_at
       )
@@ -87,7 +105,7 @@ RSpec.describe 'Visits', type: :request do
         properties: {
           page_id: {
             type: :integer,
-            default: page.id
+            default: visit_attributes[:page_id]
           },
           user_id: {
             type: :integer,
@@ -111,6 +129,10 @@ RSpec.describe 'Visits', type: :request do
       }, required: true
 
       response '201', 'visit created' do
+        before do
+        page = Page.find_or_create_by(FactoryBot.attributes_for(:page))
+        end
+
         let(:visit) do
           {
             page_id: page.id,
@@ -124,12 +146,12 @@ RSpec.describe 'Visits', type: :request do
 
         example 'application/json', 'success response', {
           data: {
-            page_id: visit.page_id,
-            user_id: visit.user_id,
-            visited_at: visit.visited_at.strftime(time_format),
-            ip_address: visit.address,
-            latitude: visit.latitude.to_f,
-            longitude: visit.longitude.to_f
+            page_id: visit_attributes[:page_id],
+            user_id: visit_attributes[:user_id],
+            visited_at: visit_attributes[:visited_at].strftime(time_format),
+            ip_address: ip_info.address,
+            latitude: visit_attributes[:latitude].to_f,
+            longitude: visit_attributes[:longitude].to_f
           }
         }
 
@@ -139,7 +161,7 @@ RSpec.describe 'Visits', type: :request do
       response '400', 'bad request' do
         let(:visit) do
           {
-            page_id: page.id,
+            page_id: visit_attributes[:page_id],
             user_id: nil,
             visited_at: visited_at.strftime(time_format),
           }

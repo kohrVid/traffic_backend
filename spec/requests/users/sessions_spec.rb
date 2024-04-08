@@ -2,15 +2,33 @@ require 'rails_helper'
 require 'swagger_helper'
 
 RSpec.describe 'Users::Sessions', type: :request do
+  let(:ip_location) { double(:ip_location) }
+
+  before do
+    allow(IpLocation).to receive(:new)
+      .and_return(ip_location)
+
+    allow(ip_location).to receive(:coordinates)
+      .and_return([])
+
+    allow(ip_location).to receive(:vpn?).and_return(false)
+  end
+
   path '/users/auth' do
     get 'authenticate user' do
       tags 'Users'
       consumes 'application/json'
       produces 'application/json'
 
-      ip_info = IpInfo.last || FactoryBot.create(:ip_info)
-      user = User.last ||
-        FactoryBot.create(:user, registration_ip_info: ip_info)
+      user_attributes = FactoryBot.attributes_for(
+        :user,
+        registration_ip_info: IpInfo.find_or_create_by(
+          FactoryBot.attributes_for(:ip_info)
+        )
+      )
+
+      user = User.find_by(username: user_attributes[:username]) ||
+        User.create(user_attributes)
 
       response '200', 'user authenticated' do
         before { sign_in user }
@@ -44,8 +62,8 @@ RSpec.describe 'Users::Sessions', type: :request do
       consumes 'application/json'
       produces 'application/json'
 
-      ip_info = IpInfo.last || FactoryBot.create(:ip_info)
-      user1 = User.create(FactoryBot.attributes_for(:user, registration_ip_info: ip_info))
+      user_attributes = FactoryBot.attributes_for(:user, :random_name)
+      before { User.create(user_attributes) }
 
       parameter name: :body, in: :body, schema: { 
         type: :object,
@@ -55,11 +73,11 @@ RSpec.describe 'Users::Sessions', type: :request do
             properties: {
               email: { 
                 type: :string,
-                default: user1.email
+                default: user_attributes[:email]
               },
               password: { 
                 type: :string,
-                default: 'Password1234!'
+                default: user_attributes[:password]
               },
             },
             required: [
@@ -71,13 +89,11 @@ RSpec.describe 'Users::Sessions', type: :request do
       }, required: true
 
       response '201', 'user signed in' do
-        before { user1 }
-
         let(:body) do
           {
             user: {
-              email: user1.email,
-              password: 'Password1234!'
+              email: user_attributes[:email],
+              password: user_attributes[:password]
             }
           }
         end
@@ -93,7 +109,7 @@ RSpec.describe 'Users::Sessions', type: :request do
         let(:user) do
           {
             user: {
-              email: user1.email,
+              email: user_attributes[:email],
               password: 'wrongPassword123'
             }
           }
