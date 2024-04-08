@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'faraday'
 
 class IpLocation
@@ -24,8 +26,8 @@ class IpLocation
     uri = URI(url)
 
     conn = Faraday.new(
-      url: url,
-      headers: { "Content-Type" => "application/json" },
+      url:,
+      headers: { 'Content-Type' => 'application/json' },
       request: { timeout: 1 }
     )
 

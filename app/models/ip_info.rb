@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class IpInfo < ApplicationRecord
   has_many :registered_users, class_name: 'User'
   has_many :visits
@@ -23,7 +25,7 @@ class IpInfo < ApplicationRecord
     update(
       latitude: lat,
       longitude: lon,
-      is_vpn: is_vpn
+      is_vpn:
     )
   end
 end

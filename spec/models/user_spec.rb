@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
@@ -57,7 +59,7 @@ RSpec.describe User, type: :model do
         it 'raises the correct error message' do
           expect(
             new_user.errors.messages[:username]
-          ).to include("has already been taken")
+          ).to include('has already been taken')
         end
       end
     end

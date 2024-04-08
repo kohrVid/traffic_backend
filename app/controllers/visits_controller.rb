@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class VisitsController < ApplicationController
   before_action :set_visits, only: :index
 
@@ -9,7 +11,7 @@ class VisitsController < ApplicationController
       VisitSerializer.new(visit).serializable_hash
     end
 
-    render json: { data: data }, status: :ok
+    render json: { data: }, status: :ok
   end
 
   def create
@@ -28,29 +30,29 @@ class VisitsController < ApplicationController
 
   def visit_params
     params.require(:visit)
-      .permit(
-        :page_id,
-        :user_id,
-        :visited_at,
-        ip_info_attributes: [:address]
-      )
+          .permit(
+            :page_id,
+            :user_id,
+            :visited_at,
+            ip_info_attributes: [:address]
+          )
   end
 
   def set_visits
-   @visits = if params[:user_id].present?
-               User.find(params[:user_id]).visits
-             else
-               Visit.includes(:ip_info)
-             end
+    @visits = if params[:user_id].present?
+                User.find(params[:user_id]).visits
+              else
+                Visit.includes(:ip_info)
+              end
   end
 
   def filter_by_time
     from_time = params[:from]&.to_time || Time.new(0)
     to_time = params[:to]&.to_time || Time.zone.now
 
-    if params[:from].present? || params[:to].present?
-      @visits = @visits.visited_between(from_time, to_time)
-    end
+    return unless params[:from].present? || params[:to].present?
+
+    @visits = @visits.visited_between(from_time, to_time)
   end
 
   def filter_by_page

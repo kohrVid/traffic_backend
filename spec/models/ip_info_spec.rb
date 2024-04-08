@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe IpInfo, type: :model do
@@ -24,7 +26,7 @@ RSpec.describe IpInfo, type: :model do
       end
 
       context 'when it is missing or blank' do
-        before { new_ip.save}
+        before { new_ip.save }
 
         it 'is invalid' do
           expect(new_ip).not_to be_valid
@@ -52,7 +54,7 @@ RSpec.describe IpInfo, type: :model do
         it 'raises the correct error message' do
           expect(
             new_ip.errors.messages[:address]
-          ).to include("has already been taken")
+          ).to include('has already been taken')
         end
       end
     end
@@ -108,27 +110,15 @@ RSpec.describe IpInfo, type: :model do
         end
 
         it 'does not change the latitude' do
-          expect {
-            subject.save
-          }.not_to change {
-            subject.latitude
-          }
+          expect { subject.save }.not_to(change { subject.latitude })
         end
 
         it 'does not change the longitude' do
-          expect {
-            subject.save
-          }.not_to change {
-            subject.longitude
-          }
+          expect { subject.save }.not_to(change { subject.longitude })
         end
 
         it 'does not set the VPN status' do
-          expect {
-            subject.save
-          }.not_to change {
-            subject.is_vpn
-          }
+          expect { subject.save }.not_to(change { subject.is_vpn })
         end
       end
 
@@ -142,27 +132,15 @@ RSpec.describe IpInfo, type: :model do
         end
 
         it 'changes the latitude' do
-          expect {
-            subject.save
-          }.to change {
-            subject.latitude
-          }.to(lat)
+          expect { subject.save }.to change { subject.latitude }.to(lat)
         end
 
         it 'changes the longitude' do
-          expect {
-            subject.save
-          }.to change {
-            subject.longitude
-          }.to(lon)
+          expect { subject.save }.to change { subject.longitude }.to(lon)
         end
 
         it 'sets the VPN status' do
-          expect {
-            subject.save
-          }.to change {
-            subject.is_vpn
-          }.to(false)
+          expect { subject.save }.to change { subject.is_vpn }.to(false)
         end
       end
     end
