@@ -61,6 +61,7 @@ RSpec.describe 'Visits', type: :request do
       response '200', 'visits found' do
         example 'application/json', 'success response', [
           {
+            id: visit1.id,
             page_id: visit1.page_id,
             user_id: nil,
             visited_at: visit1.visited_at.strftime(time_format),
@@ -69,6 +70,7 @@ RSpec.describe 'Visits', type: :request do
             longitude: visit1.longitude.to_f
           },
           {
+            id: visit2.id,
             page_id: visit2.page_id,
             user_id: visit2.user_id,
             visited_at: visit2.visited_at.strftime(time_format),

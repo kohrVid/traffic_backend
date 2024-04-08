@@ -11,6 +11,7 @@ class VisitSerializer
 
   def attributes
     {
+      id: nil,
       page_id: nil,
       user_id: nil,
       visited_at: nil,
@@ -21,6 +22,10 @@ class VisitSerializer
   end
 
   private
+
+  def id
+    @visit[:id]
+  end
 
   def page_id
     @visit[:page_id]
