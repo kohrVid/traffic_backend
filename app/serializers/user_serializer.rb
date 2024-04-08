@@ -46,14 +46,6 @@ class UserSerializer
     }
   end
 
-  def latitude
-    @user.latitude.to_f
-  end
-
-  def longitude
-    @user.longitude.to_f
-  end
-
   def created_at
     @user[:created_at]
   end
