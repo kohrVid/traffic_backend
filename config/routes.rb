@@ -23,4 +23,6 @@ Rails.application.routes.draw do
   devise_scope :user do
     get 'users/auth', to: 'users/sessions#show'
   end
+
+  resources :users, only: [:show]
 end

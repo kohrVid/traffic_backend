@@ -42,7 +42,7 @@ paths:
                       username: cleo
                       email: cleo@kohrvid.com
                       is_admin:
-                      registration_ip_info_id: 7
+                      registration_ip_info_id: 5
                       created_at: '2024-04-07T17:13:30.981Z'
                       updated_at: '2024-04-07T17:13:30.981Z'
         '422':
@@ -196,6 +196,41 @@ paths:
             application/json:
               examples:
                 success response: {}
+  "/users/{id}":
+    get:
+      summary: user
+      tags:
+      - Users
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: user found
+          content:
+            application/json:
+              examples:
+                success response:
+                  value:
+                    data:
+                      id:
+                      username: cleo
+                      email: cleo@kohrvid.com
+                      is_admin: false
+                      registration_ip_info_id: 5
+                      created_at:
+                      updated_at:
+        '404':
+          description: user not found
+          content:
+            application/json:
+              examples:
+                unfound response:
+                  value:
+                    data: {}
   "/visits":
     get:
       summary: list visits
@@ -255,7 +290,7 @@ paths:
                     data:
                       page_id: 4
                       user_id:
-                      visited_at: 2024.04.08 00:31:43
+                      visited_at: 2024.04.08 00:33:06
                       ip_address: 213.152.176.135
                       latitude: 0.0
                       longitude: 0.0
@@ -282,7 +317,7 @@ paths:
                   default:
                 visited_at:
                   type: string
-                  default: 2024.04.08 00:31:43
+                  default: 2024.04.08 00:33:06
                 ip_info_attributes:
                   type: object
                   properties:
