@@ -49,10 +49,10 @@ class VisitsController < ApplicationController
   end
 
   def filter_by_time
+    return unless params[:from].present? || params[:to].present?
+
     from_time = params[:from]&.to_time || Time.new(0)
     to_time = params[:to]&.to_time || Time.zone.now
-
-    return unless params[:from].present? || params[:to].present?
 
     @visits = @visits.visited_between(from_time, to_time)
   end

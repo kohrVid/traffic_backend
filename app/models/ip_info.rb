@@ -5,7 +5,7 @@ class IpInfo < ApplicationRecord
   has_many :registered_users, class_name: 'User'
   has_many :visits
 
-  after_create :get_location_data
+  after_create :set_location_data
 
   validates :address, presence: true, uniqueness: { case_sensitive: false }
 
@@ -15,7 +15,7 @@ class IpInfo < ApplicationRecord
 
   private
 
-  def get_location_data
+  def set_location_data
     return if loopback?
     return if latitude && longitude
 
