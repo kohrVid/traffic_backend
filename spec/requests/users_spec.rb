@@ -123,6 +123,8 @@ RSpec.describe 'Users', type: :request do
         example 'application/json', 'success response', [
           {
             page_id: visit1.page_id,
+            page_name: visit1.page.name,
+            page_url: visit1.page.url,
             user_id: nil,
             visited_at: visit1.visited_at.strftime(time_format),
             ip_address: visit1.address,
@@ -131,6 +133,8 @@ RSpec.describe 'Users', type: :request do
           },
           {
             page_id: visit2.page_id,
+            page_name: visit1.page.name,
+            page_url: visit1.page.url,
             user_id: visit2.user_id,
             visited_at: visit2.visited_at.strftime(time_format),
             ip_address: visit2.address,

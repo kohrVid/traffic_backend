@@ -63,6 +63,8 @@ RSpec.describe 'Visits', type: :request do
           {
             id: visit1.id,
             page_id: visit1.page_id,
+            page_name: visit1.page.name,
+            page_url: visit1.page.url,
             user_id: nil,
             visited_at: visit1.visited_at.strftime(time_format),
             ip_address: visit1.address,
@@ -72,6 +74,8 @@ RSpec.describe 'Visits', type: :request do
           {
             id: visit2.id,
             page_id: visit2.page_id,
+            page_name: visit2.page.name,
+            page_url: visit2.page.url,
             user_id: visit2.user_id,
             visited_at: visit2.visited_at.strftime(time_format),
             ip_address: visit2.address,
@@ -151,6 +155,8 @@ RSpec.describe 'Visits', type: :request do
         example 'application/json', 'success response', {
           data: {
             page_id: visit_attributes[:page_id],
+            page_name: page.name,
+            page_url: page.url,
             user_id: visit_attributes[:user_id],
             visited_at: visit_attributes[:visited_at].strftime(time_format),
             ip_address: ip_info.address,

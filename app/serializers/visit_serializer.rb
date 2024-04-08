@@ -13,6 +13,8 @@ class VisitSerializer
     {
       id: nil,
       page_id: nil,
+      page_name: nil,
+      page_url: nil,
       user_id: nil,
       visited_at: nil,
       ip_address: nil,
@@ -29,6 +31,14 @@ class VisitSerializer
 
   def page_id
     @visit[:page_id]
+  end
+
+  def page_name
+    @visit.page[:name]
+  end
+
+  def page_url
+    @visit.page[:url]
   end
 
   def user_id

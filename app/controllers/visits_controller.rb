@@ -20,7 +20,9 @@ class VisitsController < ApplicationController
     @visit = Visit.build(visit_params)
 
     if @visit.save
-      render json: { data: @visit.to_json }, status: :created
+      render json: { 
+        data: VisitSerializer.new(@visit).serializable_hash
+      }, status: :created
     else
       render json: {
         errors: ['an error has prevented the visit from being saved']
@@ -42,9 +44,9 @@ class VisitsController < ApplicationController
 
   def set_visits
     @visits = if params[:user_id].present?
-                User.find(params[:user_id]).visits
+                User.find(params[:user_id]).visits.includes(:page)
               else
-                Visit.includes(:ip_info)
+                Visit.includes(:page, :ip_info)
               end
   end
 
