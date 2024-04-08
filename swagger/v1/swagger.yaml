@@ -128,6 +128,38 @@ paths:
                   - registration_ip_info_attributes
               required:
               - user
+    get:
+      summary: users
+      tags:
+      - Users
+      responses:
+        '200':
+          description: users found
+          content:
+            application/json:
+              examples:
+                success response:
+                  value:
+                    data:
+                    - id:
+                      username: cleo
+                      email: cleo@kohrvid.com
+                      is_admin: false
+                      registration_ip_info:
+                        address: 213.152.176.135
+                        latitude: '52.374'
+                        longitude: '4.8897'
+                      created_at:
+                      updated_at:
+        '403':
+          description: forbidden
+          content:
+            application/json:
+              examples:
+                failure response:
+                  value:
+                    errors:
+                    - forbidden
   "/users/auth":
     get:
       summary: authenticate user
@@ -233,7 +265,10 @@ paths:
                       username: cleo
                       email: cleo@kohrvid.com
                       is_admin: false
-                      registration_ip_info_id: 7
+                      registration_ip_info:
+                        address: 213.152.176.135
+                        latitude: '52.374'
+                        longitude: '4.8897'
                       created_at:
                       updated_at:
         '404':
@@ -281,12 +316,16 @@ paths:
                 success response:
                   value:
                   - page_id: 6
+                    page_name: about
+                    page_url: http://localhost:1234/about
                     user_id:
                     visited_at: 2024.04.03 13:00:00
                     ip_address: 213.152.176.135
                     latitude: 52.374
                     longitude: 4.8897
                   - page_id: 4
+                    page_name: about
+                    page_url: http://localhost:1234/about
                     user_id:
                     visited_at: 2024.04.04 00:50:00
                     ip_address: 213.152.176.135
@@ -323,13 +362,19 @@ paths:
               examples:
                 success response:
                   value:
-                  - page_id: 8
+                  - id: 5
+                    page_id: 8
+                    page_name: about
+                    page_url: http://localhost:1234/about
                     user_id:
                     visited_at: 2024.04.03 13:00:00
                     ip_address: 213.152.176.135
                     latitude: 52.374
                     longitude: 4.8897
-                  - page_id: 4
+                  - id: 6
+                    page_id: 4
+                    page_name: about
+                    page_url: http://localhost:1234/about
                     user_id:
                     visited_at: 2024.04.04 00:50:00
                     ip_address: 213.152.176.135
@@ -350,8 +395,10 @@ paths:
                   value:
                     data:
                       page_id: 4
+                      page_name: about
+                      page_url: http://localhost:1234/about
                       user_id:
-                      visited_at: 2024.04.08 01:06:35
+                      visited_at: 2024.04.08 13:27:43
                       ip_address: 213.152.176.135
                       latitude: 0.0
                       longitude: 0.0
@@ -378,7 +425,7 @@ paths:
                   default:
                 visited_at:
                   type: string
-                  default: 2024.04.08 01:06:35
+                  default: 2024.04.08 13:27:43
                 ip_info_attributes:
                   type: object
                   properties:
