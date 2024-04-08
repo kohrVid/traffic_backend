@@ -95,4 +95,14 @@ RSpec.describe User, type: :model do
       end
     end
   end
+
+  describe '#visits' do
+    let(:user) do
+      create(:user, :random_name)
+    end
+
+    it 'can be associated with visits' do
+      expect(user).to respond_to(:visits)
+    end
+  end
 end

@@ -24,5 +24,7 @@ Rails.application.routes.draw do
     get 'users/auth', to: 'users/sessions#show'
   end
 
-  resources :users, only: [:show]
+  resources :users, only: [:show, :user_visits] do
+    resources :visits, only: [:index]
+  end
 end
